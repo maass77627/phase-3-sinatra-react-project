@@ -6,4 +6,26 @@ class ApplicationController < Sinatra::Base
     { message: "Good luck with your project!" }.to_json
   end
 
+  get "/recipes" do 
+  Recipe.all.to_json
+ end
+
+  post "/recipes" do
+    # binding.pry
+    puts "PARAMS => #{params.inspect}"
+   recipe = Recipe.create(name: params[:name], image: params[:image], last_cooked_on: params[:last_cooked_on])
+   recipe.to_json
+ end
+
+patch "/recipes/:id" do
+     recipe = Recipe.find(params[:id])
+     recipe.update(
+        name: params[:name],
+        image: params[:image],
+        last_cooked_on: params[:last_cooked_on]
+     )
+     recipe.to_json
+
+ end
+
 end
