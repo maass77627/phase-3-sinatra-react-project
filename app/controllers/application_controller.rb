@@ -12,7 +12,7 @@ class ApplicationController < Sinatra::Base
 
   post "/recipes" do
     # binding.pry
-    puts "PARAMS => #{params.inspect}"
+    
    recipe = Recipe.create(name: params[:name], image: params[:image], last_cooked_on: params[:last_cooked_on])
    recipe.to_json
  end
@@ -26,6 +26,12 @@ patch "/recipes/:id" do
      )
      recipe.to_json
 
+ end
+
+ delete "/recipes/:id" do 
+  recipe = Recipe.find(params[:id])
+  recipe.destroy
+  status 204
  end
 
 end
