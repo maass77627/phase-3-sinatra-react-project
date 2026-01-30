@@ -23,16 +23,21 @@ class ApplicationController < Sinatra::Base
 
 patch "/recipes/:id" do
      recipe = Recipe.find(params[:id])
-     recipe.update(
-        name: params[:name],
-        image: params[:image],
-        last_cooked_on: params[:last_cooked_on],
-        ingredients: params[:ingredients],
-        directions: params[:directions],
-        cook_time: params[:cook_time],
-        category_id: params[:category_id]
-     )
-     recipe.to_json
+     update_attrs = {
+    name: params[:name],
+    image: params[:image],
+    ingredients: params[:ingredients],
+    directions: params[:directions],
+    cook_time: params[:cook_time],
+    category_id: params[:category_id],
+    last_cooked_on: params[:last_cooked_on]
+  }.compact   
+
+  recipe.update(update_attrs)
+    
+    recipe.attributes.merge(
+    days_since_last_cooked: recipe.days_since_last_cooked
+  ).to_json
 
  end
 
