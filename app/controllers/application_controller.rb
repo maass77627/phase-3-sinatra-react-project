@@ -7,13 +7,17 @@ class ApplicationController < Sinatra::Base
   end
 
   get "/recipes" do 
-  Recipe.all.to_json
+    Recipe.all.map {|recipe| recipe.attributes.merge(days_since_last_cooked: recipe.days_since_last_cooked) }.to_json
+    
+    
+  # Recipe.all.to_json
  end
 
   post "/recipes" do
     # binding.pry
     
-   recipe = Recipe.create(name: params[:name], image: params[:image], last_cooked_on: params[:last_cooked_on])
+   recipe = Recipe.create(name: params[:name], image: params[:image], last_cooked_on: params[:last_cooked_on], ingredients: params[:ingredients], directions: params[:directions], cook_time: params[:cook_time])
+   recipe.capitalize_title
    recipe.to_json
  end
 
@@ -22,7 +26,11 @@ patch "/recipes/:id" do
      recipe.update(
         name: params[:name],
         image: params[:image],
-        last_cooked_on: params[:last_cooked_on]
+        last_cooked_on: params[:last_cooked_on],
+        ingredients: params[:ingredients],
+        directions: params[:directions],
+        cook_time: params[:cook_time],
+        category_id: params[:category_id]
      )
      recipe.to_json
 
@@ -32,6 +40,10 @@ patch "/recipes/:id" do
   recipe = Recipe.find(params[:id])
   recipe.destroy
   status 204
+ end
+
+  get "/categories" do 
+  Category.all.to_json
  end
 
 end
